@@ -92,6 +92,16 @@
             font-size: 12px;
             margin-top: 25px;
         }
+
+        .product-image {
+            width: 180px;
+            height: 180px;
+            object-fit: contain;
+            border-radius: 12px;
+            margin: 20px auto;
+            display: block;
+            background: #f8fafc;
+        }
     </style>
 </head>
 
@@ -103,6 +113,7 @@
         <p class="subtitle">Informasi Harga Produk</p>
 
         <div class="product-name" id="name"></div>
+        <img class="product-image" id="image" src="" alt="Foto Produk">
         <div class="price" id="price"></div>
 
         <p class="subtitle">Terima kasih telah berbelanja!</p>
@@ -126,23 +137,28 @@
     const products = {
         "air-putih": {
             name: "Air Putih",
-            price: 4000
+            price: 4000,
+            image: "images/aqua.jpg"
         },
         "kopi-golda": {
             name: "Kopi Golda",
-            price: 4500
+            price: 4500,
+            image: "images/golda.jpg"
         },
         "pop-mie": {
             name: "Pop Mie",
-            price: 6500
+            price: 6500,
+            image: "images/popmie.jpg"
         },
         "roti": {
             name: "Roti",
-            price: 6000
+            price: 6000,
+            image: "images/roti.jpg"
         },
         "susu-uht":{
             name: "Susu UHT",
-            price: 8000
+            price: 8000,
+            image: "images/susuuht.jpg"
         }
     };
 
@@ -159,7 +175,10 @@
 
         document.getElementById("name").textContent =
             product.name;
-
+        document.getElementById("image").src =
+            product.image;
+        document.getElementById("image").alt =
+            product.name;
         document.getElementById("price").textContent =
             "Rp" + product.price.toLocaleString("id-ID");
 
