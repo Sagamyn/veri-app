@@ -1,0 +1,213 @@
+
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Toko Sembako - Harga Produk</title>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            padding: 25px 15px;
+            font-family: Arial, sans-serif;
+            background: #f1f5f9;
+            color: #1e293b;
+        }
+
+        .container {
+            max-width: 450px;
+            margin: auto;
+        }
+
+        .card {
+            background: white;
+            padding: 25px;
+            border-radius: 16px;
+            text-align: center;
+            box-shadow: 0 4px 15px #00000010;
+        }
+
+        h1 {
+            font-size: 24px;
+            margin-bottom: 5px;
+        }
+
+        .subtitle {
+            color: #64748b;
+            font-size: 14px;
+        }
+
+        .product-name {
+            font-size: 25px;
+            font-weight: bold;
+            margin-top: 30px;
+        }
+
+        .price {
+            font-size: 36px;
+            font-weight: bold;
+            color: #16a34a;
+            margin: 15px 0;
+        }
+
+        .back {
+            display: inline-block;
+            margin-top: 20px;
+            color: #2563eb;
+            text-decoration: none;
+        }
+
+        .qr-list {
+            display: grid;
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        .qr-item {
+            background: white;
+            padding: 18px;
+            border-radius: 12px;
+            text-align: center;
+        }
+
+        .qr-code {
+            display: flex;
+            justify-content: center;
+            margin: 15px;
+        }
+
+        .qr-item p {
+            font-weight: bold;
+        }
+
+        .note {
+            color: #64748b;
+            font-size: 12px;
+            margin-top: 25px;
+        }
+    </style>
+</head>
+
+<body>
+<div class="container">
+
+    <div class="card" id="product-page">
+        <h1> TOKO SEMBAKO </h1>
+        <p class="subtitle">Informasi Harga Produk</p>
+
+        <div class="product-name" id="name"></div>
+        <div class="price" id="price"></div>
+
+        <p class="subtitle">Terima kasih telah berbelanja!</p>
+        <a href="#" class="back" onclick="location.href=location.pathname; return false;">
+            Kembali
+        </a>
+    </div>
+
+    <div id="qr-page" style="display:none">
+        <div class="card">
+            <h1>TOKO SEMBAKO</h1>
+            <p class="subtitle">Daftar QR Code Produk</p>
+        </div>
+        <div class="qr-list" id="qr-list"></div>
+    </div>
+
+    <p class="note" style="text-align:center">
+        Harga dapat berubah sewaktu-waktu.
+    </p>
+
+</div>
+
+<script>
+    const products = {
+        "air-putih": {
+            name: "Air Putih",
+            price: 4000
+        },
+        "kopi-golda": {
+            name: "Kopi Golda",
+            price: 4500
+        },
+        "pop-mie": {
+            name: "Pop Mie",
+            price: 6500
+        },
+        "roti": {
+            name: "Roti",
+            price: 6000
+        }
+    };
+
+    const params = new URLSearchParams(window.location.search);
+    const id = params.get("id");
+
+    const productPage = document.getElementById("product-page");
+    const qrPage = document.getElementById("qr-page");
+
+    if (id && products[id]) {
+
+        // Menampilkan harga produk
+        const product = products[id];
+
+        document.getElementById("name").textContent =
+            product.name;
+
+        document.getElementById("price").textContent =
+            "Rp" + product.price.toLocaleString("id-ID");
+
+    } else if (id) {
+
+        // ID produk tidak ditemukan
+        productPage.innerHTML = `
+            <h1>Produk Tidak Ditemukan</h1>
+            <p class="subtitle">QR Code tidak valid atau produk belum tersedia.</p>
+            <a href="${location.pathname}" class="back">Kembali</a>
+        `;
+
+    } else {
+
+        // Menampilkan daftar QR Code untuk admin
+        productPage.style.display = "none";
+        qrPage.style.display = "block";
+
+        const qrList = document.getElementById("qr-list");
+
+        Object.entries(products).forEach(([id, product]) => {
+
+            const url = new URL(location.pathname, location.origin);
+            url.searchParams.set("id", id);
+
+            const item = document.createElement("div");
+            item.className = "qr-item";
+
+            const title = document.createElement("p");
+            title.textContent = product.name;
+
+            const price = document.createElement("p");
+            price.textContent =
+                "Rp" + product.price.toLocaleString("id-ID");
+
+            const qr = document.createElement("div");
+            qr.className = "qr-code";
+
+            item.append(title, price, qr);
+            qrList.appendChild(item);
+
+            new QRCode(qr, {
+                text: url.href,
+                width: 160,
+                height: 160
+            });
+        });
+    }
+</script>
+
+</body>
+</html>
